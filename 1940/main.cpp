@@ -1,6 +1,6 @@
 #include <iostream>
 
-void conquer(int*, int, int);
+int conquer(int*, int, int);
 void quicksort(int*, int, int);
 void switchData(int*, int*);
 int countArmor(int*, int, int);
@@ -26,35 +26,35 @@ int main()
     return 0;
 }
 
-void conquer(int* arr, int left, int right)
+int conquer(int* arr, int left, int right)
 {
-    int mid = left + right / 2, pivot = arr[mid], i = left, j = right + 1;
-
+    int mid = (left+right)/2, pivot = arr[mid], i = left, j = right+1;
     switchData(arr+left, arr+mid);
     do
     {
         do
         {
             if (pivot < arr[++i]) break; 
-        } while (i <= right);
+        } while (i <= right && i <= j);
 
         do
         {
             if (arr[--j] < pivot) break;
-        } while (left < j);
+        } while (left < j && i <= j);
 
         if (i < j) switchData(arr+i, arr+j);
     } while(i < j);
     switchData(arr+left, arr+j);
+    return j;
 }
 
 void quicksort(int* arr, int left, int right)
 {
-    int mid = left + right / 2, len = right - left;
+    int mid = (left + right) / 2, len = right-left, pivot;
     if (len < 1) return;
-    conquer(arr, left, right);
-    quicksort(arr, left, mid - 1); 
-    quicksort(arr, mid, right);
+    pivot = conquer(arr, left, right);
+    quicksort(arr, left, pivot); 
+    quicksort(arr, pivot+1, right);
 }
 
 void switchData(int* a, int* b)
@@ -66,13 +66,24 @@ void switchData(int* a, int* b)
 
 int countArmor(int* arr, int len, int condition)
 {
-    int i = 0, j = len - 1, armor = 0;
+    int i = 0, j = len, armor = 0;
 
     while (i < j)
     {
-        while(condition < arr[i] + arr[j]) j--;
-        while(arr[i] + arr[j] < condition) i++;
-        if (condition = arr[i] + arr[j]) armor++;
+        do {
+            j--;
+        }
+        while(condition < arr[i] + arr[j]);
+
+        while(arr[i] + arr[j] < condition) 
+        {
+            i++;
+        }
+
+        if (condition == arr[i] + arr[j] && i < j) 
+        {
+            armor++;
+        }
     }
     return armor;
 }
