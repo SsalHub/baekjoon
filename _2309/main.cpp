@@ -26,4 +26,6 @@ void sort(int* arr, std::map<int, int> *map, int len) {
     for(int i=0; i<len; i++) {
         (*map)[arr[i]] += 1;
     }
+
+    
 }
