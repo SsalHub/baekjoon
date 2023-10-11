@@ -3,51 +3,60 @@
 
 #define MAX_N 1000
 #define ARRAY_WIDTH 2
-#define DAY_IDX 0
-#define WORTH_IDX 1
 
-int partition(int arr[][ARRAY_WIDTH], int priority[], int left, int right);
-void qsort(int arr[][ARRAY_WIDTH], int priority[], int left, int right);
-void swap(int* e1, int* e2);
-void setPriority(int priority[], int prio1, int prio2);
-int getPriorityIndex(int arr[][ARRAY_WIDTH], int priority[], int idx1, int idx2);
-int compare(int arr[][ARRAY_WIDTH], int priority[], int idxLeft, int idxRight);
-int getFinalScore(int homework[][ARRAY_WIDTH], int n);
-void printArray(int arr[][ARRAY_WIDTH], int start, int end);
+typedef struct Homework
+{
+    int deadline;
+    int score;
+} Homework;
+
+typedef enum PriorityType
+{
+    _DEADLINE_,
+    _SCORE_,
+} PriorityType;
+
+int partition(Homework arr[], PriorityType priority[], int left, int right);
+void qsort(Homework arr[], PriorityType priority[], int left, int right);
+void swap(Homework* e1, Homework* e2);
+int compare(Homework arr[], PriorityType priority[], int idxLeft, int idxRight);
+int getFinalScore(Homework hw1[], Homework hw2[], int n);
+void printArray(Homework arr[], int start, int end);
 
 int main()
 {
     int i, n;
-    int homework[MAX_N][ARRAY_WIDTH], priority[ARRAY_WIDTH], score[ARRAY_WIDTH];
+    Homework orderInDeadline[MAX_N], orderInScore[MAX_N];
+    PriorityType priority[ARRAY_WIDTH];
 
     std::cin >> n;
 
-
     for (i = 0; i < n; i++)
     {
-        std::cin >> homework[i][DAY_IDX];
-        std::cin >> homework[i][WORTH_IDX];
+        std::cin >> orderInDeadline[i].deadline;
+        std::cin >> orderInDeadline[i].score;
     }
+    memcpy(orderInDeadline, orderInScore, n * sizeof(int));
 
-    /* First Sorting By DAY, increasing sort */
-    setPriority(priority, DAY_IDX, WORTH_IDX);
-    qsort(homework, priority, 0, n-1);
-    printArray(homework, 0, n);
-    score[DAY_IDX] = getFinalScore(homework, n);
+    /* First Sorting By _DEADLINE_, increasing sort */
+    priority[0] = _DEADLINE_;
+    priority[1] = _SCORE_;
+    qsort(orderInDeadline, priority, 0, n-1);
+    printArray(orderInDeadline, 0, n);
     std::cout << "------ SORT PROCESS DONE ------" << std::endl;
     
     /* First Sorting By WORTH, decreasing sort */
-    setPriority(priority, WORTH_IDX, DAY_IDX);
-    qsort(homework, priority, 0, n-1);
-    printArray(homework, 0, n);
-    score[WORTH_IDX] = getFinalScore(homework, n);
+    qsort(orderInScore, priority, 0, n-1);
+    printArray(orderInScore, 0, n);
 
-    std::cout << (score[DAY_IDX] > score[WORTH_IDX] ? score[DAY_IDX] : score[WORTH_IDX]) << std::endl;
+
+
+    std::cout << getFinalScore(homework, n);
 
     return 0;
 }
-        // ��Ƽ�ǿ� �ΰ�¥�� �迭�� ������ => 0���� �ǹ��ǰ�, 1���� left�� right �ؼ� low�� high???????
-int partition(int arr[][ARRAY_WIDTH], int priority[], int left, int right)
+
+int partition(Homework arr[], PriorityType priority[], int left, int right)
 {
     int pivot = left, tmp_left = left+1, low = tmp_left, high = right;
 
@@ -62,15 +71,14 @@ int partition(int arr[][ARRAY_WIDTH], int priority[], int left, int right)
             high--;
         }
         if (low < high)
-            swap(arr[low], arr[high]);
+            swap(arr+low, arr+high);
     }
     if (compare(arr, priority, pivot, high) < 0)
-        swap(arr[pivot], arr[high]);
-    printArray(arr, left, right+1);
+        swap(arr+pivot, arr+high);
     return high;
 }
 
-void qsort(int arr[][ARRAY_WIDTH], int priority[], int left, int right)
+void qsort(Homework arr[], PriorityType priority[], int left, int right)
 {
     if (!(left < right))
         return;
@@ -79,7 +87,7 @@ void qsort(int arr[][ARRAY_WIDTH], int priority[], int left, int right)
     qsort(arr, priority, pivot+1, right);
 }
 
-void swap(int* e1, int* e2)
+void swap(Homework* e1, Homework* e2)
 {
     if (e1 == e2) return;
     int tmp[ARRAY_WIDTH];
@@ -89,65 +97,71 @@ void swap(int* e1, int* e2)
     memcpy(e2, tmp, ARRAY_WIDTH*sizeof(int));
 }
 
-/* Initialize array quickly. */
-void setPriority(int priority[], int prio1, int prio2)
-{
-    int i = 0;
-
-    priority[i++] = prio1;
-    priority[i++] = prio2;
-}
-
-/* Return priority index which is not equals when compared by two index(idx1,2) in arr[][]. */
-int getPriorityIndex(int arr[][ARRAY_WIDTH], int priority[], int idx1, int idx2)
-{
-    int i = 0;
-    
-    while (i < ARRAY_WIDTH && arr[idx1][priority[i]] == arr[idx2][priority[i]]) i++;
-
-    return i < ARRAY_WIDTH ? i : -1;
-}
-
 /* If left is bigger, return -1. When equal returns 0, or 1.*/
-int compare(int arr[][ARRAY_WIDTH], int priority[], int idxLeft, int idxRight)
+int compare(Homework arr[], PriorityType priority[], int idxLeft, int idxRight)
 {
-    int p = getPriorityIndex(arr, priority, idxLeft, idxRight), offset;
-    if (p == -1) return 0;
+    int i;
 
-    switch (priority[p])
+    for (i = 0; i < ARRAY_WIDTH; i++)
     {
-        case DAY_IDX:
-            offset = 1;     // incresing sort
-            break;
-
-        case WORTH_IDX:
-            offset = -1;    // decresing sort
-            break;    
-    }
-
-    if (arr[idxLeft][priority[p]] > arr[idxRight][priority[p]])
-        return -1 * offset;
-    else
-        return 1 * offset;
-}
-
-int getFinalScore(int homework[][ARRAY_WIDTH], int n)
-{
-    int i, currDay = 1, score = 0;
-
-    for (i = 0; i < n; i++)
-    {
-        if (currDay <= homework[i][DAY_IDX])
+        switch (priority[i])
         {
-            score += homework[i][WORTH_IDX];
-            currDay++;
+            case _DEADLINE_:
+                if (arr[idxLeft].deadline == arr[idxRight].deadline)
+                    break;  // continue
+                else
+                    if (arr[idxLeft].deadline < arr[idxRight].deadline)
+                        return 1;
+                    else 
+                        return -1;
+            
+            case _SCORE_:
+                if (arr[idxLeft].score == arr[idxRight].score)
+                    break;  // continue
+                else
+                    if (arr[idxLeft].score < arr[idxRight].score)
+                        return 1;
+                    else 
+                        return -1;
+            default:
+                return 0;
         }
     }
+}
+
+int getFinalScore(Homework hw1[], Homework hw2[], int n)
+{
+    Homework order[MAX_N];
+    int i, currDay = 1, score = 0;
+
+    /* Unconditionally bring high score homework on First Day */
+    order[0] = hw2[0];
+
+    // hw1 == deadline, hw2 == score
+    for (i = 1; i < n; i++)
+    {
+        order[i] = hw2[i];
+    }
+
+    /*
+    0. 브루트포스? 근양 싹다해볼까?
+
+
+
+    1. 제일 개꿀인걸 땡겨온다
+    2. 별로인 과제가 뒤로 밀린다
+    3. 다음날에도 개꿀인 과제를 땡겨오되, 밀린 과제와 비교
+    i일에 a 과제를 했을 경우와 b 과제를 했을 경우를 모두 계산해보기
+    int doHomework(today, hw1, hw2) -> return score?
+
+    */
+
+
 
     return score;
 }
 
-void printArray(int arr[][ARRAY_WIDTH], int start, int end)
+void printArray(Homework arr[], int start, int end)
 {
     int i, j;
 
