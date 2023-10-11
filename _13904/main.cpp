@@ -6,7 +6,7 @@
 
 typedef struct Homework
 {
-    int deadline;
+    float deadline;
     int score;
 } Homework;
 
@@ -20,14 +20,15 @@ int partition(Homework arr[], PriorityType priority[], int left, int right);
 void qsort(Homework arr[], PriorityType priority[], int left, int right);
 void swap(Homework* e1, Homework* e2);
 int compare(Homework arr[], PriorityType priority[], int idxLeft, int idxRight);
-int getFinalScore(Homework hw1[], Homework hw2[], int n);
+int getFinalScore(int len, Homework orderInDeadline[], Homework orderInScore[]);
+int getHighestScore(int len, int today, Homework order[], Homework orderInDeadline[], Homework orderInScore[]);
 void printArray(Homework arr[], int start, int end);
 
 int main()
 {
-    int i, n;
     Homework orderInDeadline[MAX_N], orderInScore[MAX_N];
     PriorityType priority[ARRAY_WIDTH];
+    int i, n;
 
     std::cin >> n;
 
@@ -38,20 +39,19 @@ int main()
     }
     memcpy(orderInDeadline, orderInScore, n * sizeof(int));
 
-    /* First Sorting By _DEADLINE_, increasing sort */
+    /* First Sorting By _DEADLINE_, Increasing Sort */
     priority[0] = _DEADLINE_;
     priority[1] = _SCORE_;
     qsort(orderInDeadline, priority, 0, n-1);
     printArray(orderInDeadline, 0, n);
-    std::cout << "------ SORT PROCESS DONE ------" << std::endl;
     
-    /* First Sorting By WORTH, decreasing sort */
+    /* Second Sorting By _SCORE_, Decreasing Sort */
+    priority[0] = _SCORE_;
+    priority[1] = _DEADLINE_;
     qsort(orderInScore, priority, 0, n-1);
     printArray(orderInScore, 0, n);
 
-
-
-    std::cout << getFinalScore(homework, n);
+    std::cout << getFinalScore(n, orderInDeadline, orderInScore);
 
     return 0;
 }
@@ -75,6 +75,7 @@ int partition(Homework arr[], PriorityType priority[], int left, int right)
     }
     if (compare(arr, priority, pivot, high) < 0)
         swap(arr+pivot, arr+high);
+    printArray(arr, left, right);
     return high;
 }
 
@@ -108,57 +109,71 @@ int compare(Homework arr[], PriorityType priority[], int idxLeft, int idxRight)
         {
             case _DEADLINE_:
                 if (arr[idxLeft].deadline == arr[idxRight].deadline)
-                    break;  // continue
+                    {
+                        if (arr[idxLeft].score < arr[idxRight].score)
+                            arr[idxLeft].deadline += 0.1;
+                        else
+                            arr[idxRight].deadline += 0.1;
+                        break;  // continue
+                    }
                 else
-                    if (arr[idxLeft].deadline < arr[idxRight].deadline)
-                        return 1;
-                    else 
-                        return -1;
-            
+                    {
+                        if (arr[idxLeft].deadline < arr[idxRight].deadline)
+                            return 1;
+                        else 
+                            return -1;
+                    }
+
             case _SCORE_:
                 if (arr[idxLeft].score == arr[idxRight].score)
-                    break;  // continue
+                    {
+                        break;  // continue
+                    }
                 else
-                    if (arr[idxLeft].score < arr[idxRight].score)
-                        return 1;
-                    else 
-                        return -1;
+                    {
+                        if (arr[idxLeft].score < arr[idxRight].score)
+                            return 1;
+                        else 
+                            return -1;
+                    }
+
             default:
                 return 0;
         }
     }
 }
 
-int getFinalScore(Homework hw1[], Homework hw2[], int n)
+int getFinalScore(int len, Homework orderInDeadline[], Homework orderInScore[])
 {
     Homework order[MAX_N];
-    int i, currDay = 1, score = 0;
+    
+    /* Get Highest Score by Recursive BruteForce */
+    return getHighestScore(len, 1, order, orderInDeadline, orderInScore);
+}
 
-    /* Unconditionally bring high score homework on First Day */
-    order[0] = hw2[0];
+int getHighestScore(int len, int today, Homework order[], Homework orderInDeadline[], Homework orderInScore[])
+{
+    int i = today - 1, j, d, s;
 
-    // hw1 == deadline, hw2 == score
-    for (i = 1; i < n; i++)
+    /* Search Deadline Array To Find Satisfying 'deadline' Element */
+    for (j = i; j < len; j++)
     {
-        order[i] = hw2[i];
+        if (orderInDeadline[j].deadline < today)
+            continue;
     }
+    memcpy(order+j, orderInDeadline+j, sizeof(Homework));
+    d = getHighestScore(len, today+1, order, orderInDeadline, orderInScore);
 
-    /*
-    0. 브루트포스? 근양 싹다해볼까?
+    /* Search Score Array To Find Satisfying 'deadline' Element */
+    for (j = i; j < len; j++)
+    {
+        if (orderInScore[j].deadline < today)
+            continue;
+    }
+    memcpy(order+j, orderInScore+j, sizeof(Homework));
+    s = getHighestScore(len, today+1, order, orderInDeadline, orderInScore);
 
-
-
-    1. 제일 개꿀인걸 땡겨온다
-    2. 별로인 과제가 뒤로 밀린다
-    3. 다음날에도 개꿀인 과제를 땡겨오되, 밀린 과제와 비교
-    i일에 a 과제를 했을 경우와 b 과제를 했을 경우를 모두 계산해보기
-    int doHomework(today, hw1, hw2) -> return score?
-
-    */
-
-
-
-    return score;
+    return s > d ? s : d;
 }
 
 void printArray(Homework arr[], int start, int end)
@@ -171,7 +186,7 @@ void printArray(Homework arr[], int start, int end)
         std::cout << "[" << i << "] ";
         for (j = 0; j < ARRAY_WIDTH; j++)
         {
-            std::cout << arr[i][j] << ", ";
+            std::cout << arr[i].deadline << ", " << arr[i].score << std::endl;
         }
         std::cout << "\b\b\n";
     }
