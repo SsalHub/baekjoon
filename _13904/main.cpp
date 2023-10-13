@@ -6,7 +6,7 @@
 
 typedef struct Homework
 {
-    float deadline;
+    int deadline;
     int score;
 } Homework;
 
@@ -75,7 +75,6 @@ int partition(Homework arr[], PriorityType priority[], int left, int right)
     }
     if (compare(arr, priority, pivot, high) < 0)
         swap(arr+pivot, arr+high);
-    printArray(arr, left, right);
     return high;
 }
 
@@ -98,44 +97,50 @@ void swap(Homework* e1, Homework* e2)
     memcpy(e2, tmp, ARRAY_WIDTH*sizeof(int));
 }
 
-/* If left is bigger, return -1. When equal returns 0, or 1.*/
-int compare(Homework arr[], PriorityType priority[], int idxLeft, int idxRight)
+/* Returns the bigger one. If left is bigger, returns -1. When they're equal, returns 0, or 1.*/
+int compare(Homework arr[], PriorityType priority[], int idx1, int idx2)
 {
     int i;
+    /* 
+        continue 할 경우가 뭐뭐가 잇드라
+        
+    */
 
     for (i = 0; i < ARRAY_WIDTH; i++)
     {
         switch (priority[i])
         {
             case _DEADLINE_:
-                if (arr[idxLeft].deadline == arr[idxRight].deadline)
-                    {
-                        if (arr[idxLeft].score < arr[idxRight].score)
-                            arr[idxLeft].deadline += 0.1;
-                        else
-                            arr[idxRight].deadline += 0.1;
-                        break;  // continue
-                    }
-                else
-                    {
-                        if (arr[idxLeft].deadline < arr[idxRight].deadline)
-                            return 1;
-                        else 
+                if (arr[idx1].deadline == arr[idx2].deadline)
+                {
+                    if (arr[idx1].score == arr[idx2].score)
+                        return 0;
+                    else
+                        if (arr[idx1].deadline > arr[idx2].deadline)
                             return -1;
-                    }
+                        else 
+                            return 1;
+                }
+                else
+                {
+                    if (arr[idx1].deadline < arr[idx2].deadline)
+                        return 1;
+                    else 
+                        return -1;
+                }
 
             case _SCORE_:
-                if (arr[idxLeft].score == arr[idxRight].score)
-                    {
-                        break;  // continue
-                    }
+                if (arr[idx1].score == arr[idx2].score)
+                {
+                    break;  // continue
+                }
                 else
-                    {
-                        if (arr[idxLeft].score < arr[idxRight].score)
-                            return 1;
-                        else 
-                            return -1;
-                    }
+                {
+                    if (arr[idx1].score < arr[idx2].score)
+                        return 1;
+                    else 
+                        return -1;
+                }
 
             default:
                 return 0;
