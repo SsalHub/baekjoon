@@ -22,7 +22,7 @@ void swap(Homework* e1, Homework* e2);
 int compare(Homework arr[], PriorityType priority[], int idxLeft, int idxRight);
 int getFinalScore(int len, Homework orderInDeadline[], Homework orderInScore[]);
 int getHighestScore(int len, int today, Homework order[], Homework orderInDeadline[], Homework orderInScore[]);
-void printArray(Homework arr[], int start, int end);
+void printArray(Homework arr[], PriorityType priority[], int start, int end);
 
 int main()
 {
@@ -37,19 +37,19 @@ int main()
         std::cin >> orderInDeadline[i].deadline;
         std::cin >> orderInDeadline[i].score;
     }
-    memcpy(orderInDeadline, orderInScore, n * sizeof(int));
+    memcpy(orderInScore, orderInDeadline, n * sizeof(Homework));
 
     /* First Sorting By _DEADLINE_, Increasing Sort */
     priority[0] = _DEADLINE_;
     priority[1] = _SCORE_;
     qsort(orderInDeadline, priority, 0, n-1);
-    printArray(orderInDeadline, 0, n);
+    printArray(orderInDeadline, priority, 0, n);
     
     /* Second Sorting By _SCORE_, Decreasing Sort */
     priority[0] = _SCORE_;
     priority[1] = _DEADLINE_;
     qsort(orderInScore, priority, 0, n-1);
-    printArray(orderInScore, 0, n);
+    printArray(orderInScore, priority, 0, n);
 
     std::cout << getFinalScore(n, orderInDeadline, orderInScore);
 
@@ -101,51 +101,45 @@ void swap(Homework* e1, Homework* e2)
 int compare(Homework arr[], PriorityType priority[], int idx1, int idx2)
 {
     int i;
-    /* 
-        continue 할 경우가 뭐뭐가 잇드라
-        
-    */
 
     for (i = 0; i < ARRAY_WIDTH; i++)
     {
         switch (priority[i])
         {
             case _DEADLINE_:
-                if (arr[idx1].deadline == arr[idx2].deadline)
-                {
-                    if (arr[idx1].score == arr[idx2].score)
-                        return 0;
-                    else
-                        if (arr[idx1].deadline > arr[idx2].deadline)
-                            return -1;
-                        else 
-                            return 1;
-                }
-                else
+                if (arr[idx1].deadline != arr[idx2].deadline)
                 {
                     if (arr[idx1].deadline < arr[idx2].deadline)
                         return 1;
                     else 
                         return -1;
                 }
-
-            case _SCORE_:
-                if (arr[idx1].score == arr[idx2].score)
-                {
-                    break;  // continue
-                }
                 else
                 {
-                    if (arr[idx1].score < arr[idx2].score)
+                    break;     // continue loop
+                }
+
+            case _SCORE_:
+                if (arr[idx1].score != arr[idx2].score)
+                {
+                    //if (arr[idx1].score < arr[idx2].score)
+                    if (arr[idx1].score >= arr[idx2].score)     // reversed (to make decreasing sort)
                         return 1;
                     else 
                         return -1;
+                }
+                else
+                {
+                    break;     // continue loop
                 }
 
             default:
                 return 0;
         }
     }
+
+    /* Checked with Every Priority Element == Those Two Data Equal, So It Returns 0. */
+    return 0;
 }
 
 int getFinalScore(int len, Homework orderInDeadline[], Homework orderInScore[])
@@ -181,19 +175,29 @@ int getHighestScore(int len, int today, Homework order[], Homework orderInDeadli
     return s > d ? s : d;
 }
 
-void printArray(Homework arr[], int start, int end)
+void printArray(Homework arr[], PriorityType priority[], int start, int end)
 {
     int i, j;
 
-    std::cout << "\n*** NOW HOMEWORK ***" << std::endl;;
+    std::cout << "\n*** NOW HOMEWORK ***" << std::endl;
+    std::cout << "Best Priority : ";
+    switch (priority[0])
+    {
+        case _DEADLINE_:
+            std::cout << "Deadline";
+            break;
+            
+        case _SCORE_:
+            std::cout << "Score";
+            break;
+        
+        default:
+            break;
+    }
+    std::cout << std::endl;
     for (i = start; i < end; i++)
     {
-        std::cout << "[" << i << "] ";
-        for (j = 0; j < ARRAY_WIDTH; j++)
-        {
-            std::cout << arr[i].deadline << ", " << arr[i].score << std::endl;
-        }
-        std::cout << "\b\b\n";
+        std::cout << "[" << i << "] " << arr[i].deadline << ", " << arr[i].score << std::endl;
     }
     std::cout << "***              ***" << std::endl;
 }
