@@ -1,0 +1,14 @@
+tree로 구현.
+
+tree의 root는 비어있는 Homework 노드. 
+depth = 1 부터 데이터를 받음
+
+각 priority로 정렬된 배열들을 각각 알아서 tree에 추가
+	-> addBranch(firstPrioArr, secondPrioArr)
+		-> firstPrioArr은 -1 인덱스부터, second는 -2부터 읽기 시작(당연히 배열초과 인덱스 처리해야함)
+		-> 모든 경우의 수를 child 노드로 생성하되, deadline이 초과된 과제일 경우의 case는 더이상 뻗지 않음
+			-> 뻗지 않는걸 넘어서, 나 외에 자식이 없는 부모 노드들 전부 삭제
+
+이후 tree를 preorder로 순회하며 max score 산출/출력
+
+

@@ -2,13 +2,19 @@
 #include <cstring>
 
 #define MAX_N 1000
-#define ARRAY_WIDTH 2
+#define PRIO_LEN 2
 
 typedef struct Homework
 {
     int deadline;
     int score;
 } Homework;
+
+typedef struct TreeNode
+{
+    Homework data;
+    struct TreeNode *child[PRIO_LEN];
+} TreeNode;
 
 typedef enum PriorityType
 {
@@ -20,15 +26,14 @@ int partition(Homework arr[], PriorityType priority[], int left, int right);
 void qsort(Homework arr[], PriorityType priority[], int left, int right);
 void swap(Homework* e1, Homework* e2);
 int compare(Homework arr[], PriorityType priority[], int idxLeft, int idxRight);
-int getFinalScore(int len, Homework orderInDeadline[], Homework orderInScore[]);
-int getHighestScore(int len, int today, Homework order[], Homework orderInDeadline[], Homework orderInScore[]);
+int getMaxScore();
 void printArray(Homework arr[], PriorityType priority[], int start, int end);
 
 int main()
 {
     Homework orderInDeadline[MAX_N], orderInScore[MAX_N];
-    PriorityType priority[ARRAY_WIDTH];
-    int i, n;
+    PriorityType priority[PRIO_LEN];
+    int i, n, maxScore;
 
     std::cin >> n;
 
@@ -51,7 +56,9 @@ int main()
     qsort(orderInScore, priority, 0, n-1);
     printArray(orderInScore, priority, 0, n);
 
-    std::cout << getFinalScore(n, orderInDeadline, orderInScore);
+    maxScore = getMaxScore();
+
+    std::cout << maxScore << std::endl; 
 
     return 0;
 }
@@ -90,11 +97,11 @@ void qsort(Homework arr[], PriorityType priority[], int left, int right)
 void swap(Homework* e1, Homework* e2)
 {
     if (e1 == e2) return;
-    int tmp[ARRAY_WIDTH];
+    int tmp[PRIO_LEN];
 
-    memcpy(tmp, e1, ARRAY_WIDTH*sizeof(int));
-    memcpy(e1, e2, ARRAY_WIDTH*sizeof(int));
-    memcpy(e2, tmp, ARRAY_WIDTH*sizeof(int));
+    memcpy(tmp, e1, PRIO_LEN*sizeof(int));
+    memcpy(e1, e2, PRIO_LEN*sizeof(int));
+    memcpy(e2, tmp, PRIO_LEN*sizeof(int));
 }
 
 /* Returns the bigger one. If left is bigger, returns -1. When they're equal, returns 0, or 1.*/
@@ -102,7 +109,7 @@ int compare(Homework arr[], PriorityType priority[], int idx1, int idx2)
 {
     int i;
 
-    for (i = 0; i < ARRAY_WIDTH; i++)
+    for (i = 0; i < PRIO_LEN; i++)
     {
         switch (priority[i])
         {
@@ -142,37 +149,10 @@ int compare(Homework arr[], PriorityType priority[], int idx1, int idx2)
     return 0;
 }
 
-int getFinalScore(int len, Homework orderInDeadline[], Homework orderInScore[])
+int getMaxScore()
 {
-    Homework order[MAX_N];
-    
-    /* Get Highest Score by Recursive BruteForce */
-    return getHighestScore(len, 1, order, orderInDeadline, orderInScore);
-}
 
-int getHighestScore(int len, int today, Homework order[], Homework orderInDeadline[], Homework orderInScore[])
-{
-    int i = today - 1, j, d, s;
-
-    /* Search Deadline Array To Find Satisfying 'deadline' Element */
-    for (j = i; j < len; j++)
-    {
-        if (orderInDeadline[j].deadline < today)
-            continue;
-    }
-    memcpy(order+j, orderInDeadline+j, sizeof(Homework));
-    d = getHighestScore(len, today+1, order, orderInDeadline, orderInScore);
-
-    /* Search Score Array To Find Satisfying 'deadline' Element */
-    for (j = i; j < len; j++)
-    {
-        if (orderInScore[j].deadline < today)
-            continue;
-    }
-    memcpy(order+j, orderInScore+j, sizeof(Homework));
-    s = getHighestScore(len, today+1, order, orderInDeadline, orderInScore);
-
-    return s > d ? s : d;
+    return 0;
 }
 
 void printArray(Homework arr[], PriorityType priority[], int start, int end)
