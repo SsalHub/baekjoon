@@ -7,7 +7,7 @@ int partition(int arr[], int left, int right, bool incr);
 void qsort(int arr[], int left, int right, bool incr);
 void swap(int* e1, int* e2);
 int compare(int n1, int n2, bool b);
-int getMaxScore();
+int getMaxScore(int n, int deadline[], int score[]);
 
 int main()
 {
@@ -89,8 +89,20 @@ int compare(int n1, int n2, bool b)
     else return -1;
 }
 
-int getMaxScore()
+int getMaxScore(int n, int deadline[], int score[])
 {
-    sadsa
+    int value[MAX_N][MAX_N] = { { 0 } };
+    int i, j, day;
+
+    day = 0;
+
+    for (i = 0; i < n; i++)
+    {
+        for (j = 0; j < ; j++)
+        {
+            
+        }
+    }
+
     return 0;
 }
