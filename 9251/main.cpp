@@ -11,7 +11,7 @@ int main()
 
     char s1[1001], s2[1001];
 
-    cin << s1 << s2;
+    cin >> s1 >> s2;
     cout << getLCSLen(s1, s2);
 
     return 0;
