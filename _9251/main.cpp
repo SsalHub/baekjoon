@@ -3,7 +3,7 @@
 
 using namespace std;
 
-int getLCSLen(char s1[], char s2[]);
+int getLCSLen(char row[], char col[]);
 
 int main()
 {
@@ -17,10 +17,16 @@ int main()
     return 0;
 }
 
-int getLCSLen(char s1[], char s2[])
+int getLCSLen(char row[], char col[])
 {
-    int tableLCS[strlen(s2)+1][strlen(s1)+1] = { 0, };
+    int rowLen = strlen(row), colLen = strlen(col);
+    int table[colLen+1][rowLen+1] = { 0, };
     int i, j;
+
+    for (i = 0; i < colLen+1; i++)
+    {
+        
+    }
 
     return 0;
 }
