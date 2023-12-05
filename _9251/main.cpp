@@ -23,7 +23,7 @@ int getLCSLen(char row[], char col[])
     int table[colLen+1][rowLen+1] = { 0, };
     int i, j;
 
-    for (i = 0; i < colLen+1; i++)
+    for (i = 1; i < colLen+1; i++)
     {
         
     }
