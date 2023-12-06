@@ -1,8 +1,10 @@
 #include <iostream>
+#include <cstring>
 
 using namespace std;
 
-int packKnapsack(int itemWeight[], int items, int knapsackWeight);
+unsigned int packKnapsack(int items[], int n, int c);
+unsigned int findCombi(int arr[], int len, int left, int right);
 
 int main()
 {
@@ -19,14 +21,24 @@ int main()
     return 0;
 }
 
-int packKnapsack(int itemWeight[], int items, int knapsackWeight)
+/*
+items[]를 lows, highs 배열로 나눈뒤에
+왼쪽 부분합, 오른쪽 부분합들을 전부 계산해서 각각 배열에 집어넣고
+부분합들로 계산
+*/
+
+unsigned int packKnapsack(int items[], int n, int c)
 {
-    int i, len = items + 1, table[][] = { 0, };
-    
-    for (i=1; i<len; i++)
-    {
-        
-    }
+    unsigned int cases;
+
+    return cases;
+}
+
+unsigned int findCombi(int arr[], int len, int left, int right)
+{
+    int i;
+    unsigned int cases = 0;
+
 
     return 0;
 }

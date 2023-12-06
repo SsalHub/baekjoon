@@ -20,9 +20,10 @@ int main()
 int getLCSLen(char row[], char col[])
 {
     int rowLen = strlen(row), colLen = strlen(col);
-    int table[colLen+1][rowLen+1] = { 0, };
+    int table[colLen+1][rowLen+1];
     int i, j;
 
+    memset(table, 0, sizeof(table));
     for (i = 1; i < colLen+1; i++)
     {
         
