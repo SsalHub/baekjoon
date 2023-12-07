@@ -22,9 +22,9 @@ int main()
 }
 
 /*
-items[]를 lows, highs 배열로 나눈뒤에
-왼쪽 부분합, 오른쪽 부분합들을 전부 계산해서 각각 배열에 집어넣고
-부분합들로 계산
+    items[]를 lows, highs 배열로 나눈뒤에
+    왼쪽 부분합, 오른쪽 부분합들을 전부 계산해서 각각 배열에 집어넣고
+    부분합들로 계산
 */
 
 unsigned int packKnapsack(int items[], int n, int c)
