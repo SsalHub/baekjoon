@@ -27,10 +27,13 @@ int dp(int x)
     {
         for (j = 1; j < len; j++)
         {
-            if (table[i][j] % 3 != 0)
-                table[i][j] = table[i - 1][j] - 1;
-            else
-                table[i][j] = table[i - 1][j] / 3;
+            if (table[i-1][j] % 3 != 0 && table[i-1][j] / 3 < table[i][j])
+                table[i][j] = table[i-1][j] / 3;
+            if (table[i][j-1] % 2 != 0 && table[i][j-1] / 2 < table[i][j])
+                table[i][j] = table[i][j-1] / 2;
+            
+            if (table[i-1][j-1] < table[i][j])
+                table[i][j] = table[i-1][j-1] - 1;
         }
     }
 }
