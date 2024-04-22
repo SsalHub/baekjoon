@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <cmath>
 
 int dp(int x);
 
@@ -19,30 +20,38 @@ int dp(int x)
 {
     const int len = x + 1;
     int table[len][len];
-    int i, j, minimum = len;
+    int i, j, row, col, attempt;
 
-    if (x == 1)
-        return 1;
     memset(table, x, len * len);
 
     for (i = 1; i < len; i++)
     {
-        table[i][0] = table[i - 1][0]; // j = 0
         for (j = 1; j < len; j++)
         {
+            col = x + 1;
+            if (table[i - 1][j] % 3 == 0)
+                col = table[i - 1][j] / 3;
+            else if (table[i - 1][j] % 2 == 0)
+                col = table[i - 1][j] / 2;
+            else
+                col = table[i - 1][j] - 1;
+
+            row = x + 1;
+            if (table[i][j - 1] % 3 == 0)
+                row = table[i][j - 1] / 3;
+            else if (table[i][j - 1] % 2 == 0)
+                row = table[i][j - 1] / 2;
+            else
+                row = table[i][j - 1] - 1;
+
+            table[i][j] = std::min(row, col);
+
             if (table[i][j] == 1)
             {
-                minimum = j - 1 < minimum ? j - 1 : minimum;
-                continue;
+                attempt = j - 1;
+                break;
             }
-
-            if (table[i][j - 1] % 3 != 0)
-                table[i][j] = table[i - 1][j] / 3;
-            else if (table[i - 1][j] % 2 != 0)
-                table[i][j] = table[i][j - 1] / 2;
-            else if (table[i][j - 1] < table[i][j])
-                table[i][j] = table[i - 1][j - 1] - 1;
         }
     }
-    return minimum;
+    return attempt;
 }
