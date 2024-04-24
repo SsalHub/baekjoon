@@ -28,21 +28,15 @@ int dp(int x)
     {
         for (j = 1; j < len; j++)
         {
-            col = x + 1;
             if (table[i - 1][j] % 3 == 0)
-                col = table[i - 1][j] / 3;
-            else if (table[i - 1][j] % 2 == 0)
-                col = table[i - 1][j] / 2;
+                row = table[i - 1][j] / 3;
             else
-                col = table[i - 1][j] - 1;
+                row = table[i - 1][j] - 1;
 
-            row = x + 1;
-            if (table[i][j - 1] % 3 == 0)
-                row = table[i][j - 1] / 3;
-            else if (table[i][j - 1] % 2 == 0)
-                row = table[i][j - 1] / 2;
+            if (table[i][j - 1] % 2 == 0)
+                col = table[i][j - 1] / 2;
             else
-                row = table[i][j - 1] - 1;
+                col = table[i][j - 1] - 1;
 
             table[i][j] = std::min(row, col);
 
