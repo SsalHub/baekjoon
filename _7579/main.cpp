@@ -46,7 +46,7 @@ int getMinCost(int n, int m, vector<int> mems, vector<int> costs)
             }
             else
             {
-                table[i][j] = table[i - 1][j];
+                table[i][j] = table[i][j - 1];
             }
         }
     }
