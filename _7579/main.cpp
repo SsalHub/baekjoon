@@ -12,8 +12,8 @@ void swap(int &num1, int &num2);
 
 int main()
 {
-    std::ios_base::sync_with_stdio();
-    int apps[100][2], n, m, mem_sum = 0, cost_sum = 0;
+    ios_base::sync_with_stdio(false);
+    int apps[101][2], n, m, mem_sum = 0, cost_sum = 0;
 
     cin >> n >> m;
     for (int i = 0; i < n; i++)
@@ -46,12 +46,12 @@ int partition(int arr[][2], int left, int right)
         do
         {
             l++;
-        } while (arr[l][COST] <= arr[pivot][COST]);
+        } while (arr[l][COST] <= arr[pivot][COST] && l < r);
 
         do
         {
             r--;
-        } while (arr[pivot][COST] <= arr[r][COST]);
+        } while (arr[pivot][COST] <= arr[r][COST] && l < r);
 
         if (l < r)
         {
