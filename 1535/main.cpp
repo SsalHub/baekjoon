@@ -40,24 +40,9 @@ int dp(int n, int L[], int J[])
             }
             else
             {
-                if (HP < L[i - 1])
-                    table[i][j] = table[i][j - 1];
-                else
-                    table[i][j] = table[i][j - 1];
+                table[i][j] = std::max(table[i][j - 1], table[i - 1][j]);
             }
         }
     }
-
-    std::cout << "\n"
-              << "[ table print ]" << "\n";
-    for (int i = 0; i < n + 1; i++)
-    {
-        for (int j = 0; j < HP + 1; j++)
-        {
-            std::cout << table[i][j] << "\t";
-        }
-        std::cout << "\n";
-    }
-
     return table[n][HP];
 }
