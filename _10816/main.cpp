@@ -6,5 +6,6 @@ int main()
     std::cin.tie(0);
     int N, M;
     std::cin >> N;
+    int arr[N];
     return 0;
 }
