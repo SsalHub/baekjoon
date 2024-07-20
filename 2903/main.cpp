@@ -10,5 +10,3 @@ int main()
     std::cout << result << "\n";
     return 0;
 }
-
-// (2^15+1)^2 == 2^30 + 2^16 + 1
