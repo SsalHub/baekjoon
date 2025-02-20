@@ -11,10 +11,11 @@ int main()
     cin >> input;
     while (input != n)
     {
-        if (input < 10)
-            n = input + 0;
+        if (n == -1) n = input;
+        if (n < 10)
+            n = n + (n * 10);
         else
-            n = (input / 10) + (input % 10);
+            n = ((n / 10) + (n % 10)) % 10 + (n % 10 * 10);
         times++;
     }
     cout << times << '\n';
