@@ -20,12 +20,14 @@ def bfs(graph, start):
 
 n, m, v = map(int, input().split())
 graph = {}
-for i in range(1, n+1):
-    graph[i] = set()
-for i in range(m):
+for i in range(n):
+    graph[i+1] = set()
+for _ in range(m):
     a, b = map(int, input().split())
     graph[a].add(b)
     graph[b].add(a)
+for key in graph:
+    graph[key] = sorted(graph[key])
 dfs(graph, v, set())
 print('')
 bfs(graph, v)
