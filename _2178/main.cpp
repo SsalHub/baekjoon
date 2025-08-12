@@ -1,4 +1,5 @@
 #include <iostream>
+#include <queue>
 #define _MAX_   101
 
 using namespace std;
@@ -33,24 +34,18 @@ int main()
 int getFastestDepth(int w, int h, char maze[][_MAX_], bool visited[][_MAX_], int curr_x, int curr_y, int curr_depth)
 {
     int next[4][2] = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
-    int depth, next_x, next_y;
+    int depth = _MAX_ * _MAX_, next_x, next_y;
     visited[curr_y][curr_x] = true;
-    cout << "(" << curr_x << ", " << curr_y << ")\n";
-    if (curr_x == w && curr_y == h)
-        return curr_depth;
-    depth = curr_depth;
     for (int i = 0; i < 4; i++)
     {
         next_x = curr_x + next[i][0];
         next_y = curr_y + next[i][1];
-        if (w < next_x || h < next_y)
-            continue;
-        if (maze[next_y][next_x] == '1' && !visited[next_y][next_x])
+        if ((next_x <= w && next_y <= h) && maze[next_y][next_x] == '1' && !visited[next_y][next_x])
         {
-            depth = max(depth, getFastestDepth(w, h, maze, visited, next_x, next_y, curr_depth + 1));
+            if (next_x == w && next_y == h)
+                return curr_depth + 1;
+            depth = min(depth, getFastestDepth(w, h, maze, visited, next_x, next_y, curr_depth + 1));
         }
     }
-    if (depth == curr_depth)
-        return -1;
     return depth;
 }
