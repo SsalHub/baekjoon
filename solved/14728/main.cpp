@@ -12,12 +12,12 @@ int main()
     cin.tie(0);
     int N, T;
     cin >> N >> T;
-    int w[N], v[N];
+    int K[N], S[N];
     for (int i = 0; i < N; i++)
     {
-        cin >> w[i] >> v[i];
+        cin >> K[i] >> S[i];
     }
-    cout << dp(N, T, w, v) << "\n";
+    cout << dp(N, T, K, S) << "\n";
     return 0;
 }
 
@@ -31,12 +31,12 @@ int dp(int N, int W, int w[], int v[])
         {
             if (j < w[i - 1])
             {
-                table[i][j] = table[i][j - 1];
+                table[i][j] = table[i - 1][j];
             }
             else
             {
                 include = table[i - 1][j - w[i - 1]] + v[i - 1];
-                exclude = table[i][j - 1];
+                exclude = table[i - 1][j];
                 table[i][j] = max(include, exclude);
             }
         }
