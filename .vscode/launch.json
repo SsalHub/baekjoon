@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug with CodeLLDB (Clang)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
+            "args": [],
+            "cwd": "${fileDirname}",
+            "terminal": "integrated",  // 내부 터미널에서 실행 & cin 입력 가능
+            "preLaunchTask": "build active file (clang)"
+        }
+    ]
+}
