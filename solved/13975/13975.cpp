@@ -12,17 +12,17 @@ int main()
     {
         int K;
         cin >> K;
-        priority_queue<int, vector<int>, greater<>> file;
+        priority_queue<long long int, vector<long long int>, greater<>> file;
         for (int i = 0; i < K; i++)
         {
             int n;
             cin >> n;
             file.push(n);
         }
-        int sum = 0;
+        long long int sum = 0;
         while (2 <= file.size())
         {
-            int a, b;
+            long long int a, b;
             a = file.top();
             file.pop();
             b = file.top();
