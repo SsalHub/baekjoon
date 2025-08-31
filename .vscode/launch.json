@@ -5,7 +5,8 @@
             "name": "Debug with CodeLLDB (Clang)",
             "type": "lldb",
             "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
+            "postDebugTask": "killProcess",
+            "program": "${fileDirname}/main.exe",
             "args": [],
             "cwd": "${fileDirname}",
             "terminal": "integrated",  // 내부 터미널에서 실행 & cin 입력 가능

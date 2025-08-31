@@ -16,6 +16,17 @@
                 "isDefault": true
             },
             "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "killProcess",
+            "type": "shell",
+            "command": "taskkill",
+            "args": [
+                "/IM",
+                "main.exe",
+                "/F"
+            ],
+            "problemMatcher": []
         }
     ]
 }
