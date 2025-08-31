@@ -6,7 +6,7 @@
             "type": "lldb",
             "request": "launch",
             "postDebugTask": "killProcess",
-            "program": "${fileDirname}/main.exe",
+            "program": "${fileDirname}/${fileBasenameNoExtension}.exe",
             "args": [],
             "cwd": "${fileDirname}",
             "terminal": "integrated",  // 내부 터미널에서 실행 & cin 입력 가능

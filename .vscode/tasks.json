@@ -23,7 +23,7 @@
             "command": "taskkill",
             "args": [
                 "/IM",
-                "main.exe",
+                "${fileBasenameNoExtension}.exe",
                 "/F"
             ],
             "problemMatcher": []
