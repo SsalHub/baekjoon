@@ -1,5 +1,5 @@
-del /F %1\main.exe
-g++ %1\main.cpp -o %1\main.exe
+del /F %1\%2.exe
+g++ %1\%2.cpp -o %1\%2.exe
 timeout /t 1
 %1\%2.exe
 pause
